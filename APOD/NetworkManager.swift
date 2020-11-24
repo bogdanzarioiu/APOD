@@ -14,6 +14,9 @@ import UIKit
 //    func didFinishDownloadingDataFor(model: ImageOfTheDayModel)
 //}
 
+
+/* "https://api.nasa.gov/planetary/apod?api_key=AdmJQcQrQwQmDQcYzD4UBkgn076qS4GOASxpTxv4"
+ */
 class NetworkManager {
     let baseURL = "https://api.nasa.gov/planetary/apod?api_key=AdmJQcQrQwQmDQcYzD4UBkgn076qS4GOASxpTxv4"
     var model: ImageOfTheDayModel?
@@ -35,12 +38,6 @@ class NetworkManager {
                         
                         completion(self.model!, self.model!.hdurl)
                         print("called")
-                        
-                       
-//                        print(self.model?.copyright)
-//                        print(self.model?.explanation)
-//                        print(self.model?.hdurl)
-                        
                     }
                     
                     
@@ -72,7 +69,6 @@ class NetworkManager {
             }
             task.resume()
         }
-        //use this URL to construct an image and pass it in the completion block
     }
 }
 

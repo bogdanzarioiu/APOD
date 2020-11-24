@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B51D59BA256D50AD00872151 /* ExplanationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B51D59B9256D50AD00872151 /* ExplanationView.swift */; };
 		B5A8C2A1253A267E0020DECB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A8C2A0253A267E0020DECB /* AppDelegate.swift */; };
 		B5A8C2A3253A267E0020DECB /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A8C2A2253A267E0020DECB /* SceneDelegate.swift */; };
 		B5A8C2A5253A267E0020DECB /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A8C2A4253A267E0020DECB /* ViewController.swift */; };
@@ -18,6 +19,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		B51D59B9256D50AD00872151 /* ExplanationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExplanationView.swift; sourceTree = "<group>"; };
 		B5A8C29D253A267E0020DECB /* APOD.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = APOD.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B5A8C2A0253A267E0020DECB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B5A8C2A2253A267E0020DECB /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -65,6 +67,7 @@
 				B5A8C2A4253A267E0020DECB /* ViewController.swift */,
 				B5A8C2B4253A28070020DECB /* ImageOfTheDayModel.swift */,
 				B5A8C2B6253A28750020DECB /* NetworkManager.swift */,
+				B51D59B9256D50AD00872151 /* ExplanationView.swift */,
 				B5A8C2A6253A267E0020DECB /* Main.storyboard */,
 				B5A8C2A9253A26820020DECB /* Assets.xcassets */,
 				B5A8C2AB253A26820020DECB /* LaunchScreen.storyboard */,
@@ -148,6 +151,7 @@
 				B5A8C2A1253A267E0020DECB /* AppDelegate.swift in Sources */,
 				B5A8C2B7253A28750020DECB /* NetworkManager.swift in Sources */,
 				B5A8C2A3253A267E0020DECB /* SceneDelegate.swift in Sources */,
+				B51D59BA256D50AD00872151 /* ExplanationView.swift in Sources */,
 				B5A8C2B5253A28070020DECB /* ImageOfTheDayModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

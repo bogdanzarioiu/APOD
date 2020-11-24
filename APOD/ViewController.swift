@@ -10,36 +10,140 @@ import UIKit
 
 class ViewController: UIViewController {
     
+    lazy var popUpInstructionsWindow: ExplanationView = {
+        let popUpWindow = ExplanationView()
+        popUpWindow.delegate = self
+        popUpWindow.instructionsLabel.text = imageExplanation
+        popUpWindow.translatesAutoresizingMaskIntoConstraints = false
+        popUpWindow.layer.cornerRadius = 5
+        
+        return popUpWindow
+    }()
+    
+    private var loadingLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Loading astronomy picture of the day..."
+        label.font = UIFont(name: "AvenirNext-Heavy", size: 14)
+        
+        label.translatesAutoresizingMaskIntoConstraints = false
+        
+        
+        return label
+    }()
+    
+    var spinner = UIActivityIndicatorView()
+    
+    var imageExplanation: String = ""
+    
     private var astronomyImageOfDay: UIImageView!
     private var getImageButton = UIButton()
     private var descriptionLabel = UILabel()
     
     private var explanationView = UIView()
-    
-    //private var loadingView = UIActivityIndicatorView()
-    
-    var networkManager = NetworkManager()
         
+    var networkManager = NetworkManager()
+    private let visualEffectView: UIVisualEffectView = {
+        let blurEffect = UIBlurEffect(style: .light)
+        let view = UIVisualEffectView(effect: blurEffect)
+        view.alpha = 0
+        
+        view.translatesAutoresizingMaskIntoConstraints = false
+        
+        return view
+    }()
     
+    
+    override var prefersStatusBarHidden: Bool {
+        return true
+    }
 
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
         
-        //networkManager.delegate = self
+        view.addSubview(spinner)
+        spinner.color = .systemRed
+        spinner.style = .medium
+        spinner.startAnimating()
         
-//        view.addSubview(loadingView)
-//        loadingView.center = view.center
+        spinner.translatesAutoresizingMaskIntoConstraints = false
+
+
+        spinner.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        spinner.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+        
+        
+        
+        setupLoadingLabel()
+        networkManager.getImageOfTheDay {[weak self] (model, image) in
+            self?.imageExplanation = model.explanation
+            DispatchQueue.main.async {
+                self?.astronomyImageOfDay.image = image
+                self?.spinner.stopAnimating()
+                self?.spinner.hidesWhenStopped = true
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.2) {
+                    UIView.animate(withDuration: 0.2) {
+                        self?.getImageButton.alpha = 1.0
+                    }
+                }
+     
+            }
+        }
         
         setupAstronomyImage()
         setupDescriptionLabel()
         setupGetImageButton()
         setupExplanationView()
+        
+        view.addSubview(visualEffectView)
+        
+        
+        visualEffectView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        visualEffectView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0).isActive = true
+        visualEffectView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        visualEffectView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0).isActive = true
+        
+        
+        
     }
+    
+    private func setupLoadingLabel() {
+        view.addSubview(loadingLabel)
+        
+        loadingLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 70).isActive = true
+        loadingLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        
+    }
+    
+    
+    
+    
+    
+    @objc private func handleSecretInstructions(_ sender: UIButton) {
+        view.addSubview(popUpInstructionsWindow)
+        popUpInstructionsWindow.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        popUpInstructionsWindow.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+        popUpInstructionsWindow.widthAnchor.constraint(equalToConstant: 320).isActive = true
+        popUpInstructionsWindow.heightAnchor.constraint(equalToConstant: 800).isActive = true
+        
+        popUpInstructionsWindow.transform = CGAffineTransform(scaleX: 1.3, y: 1.3)
+        popUpInstructionsWindow.alpha = 0
+        
+        UIView.animate(withDuration: 0.4) {
+            self.visualEffectView.alpha = 1
+            self.popUpInstructionsWindow.alpha = 1
+            self.popUpInstructionsWindow.transform = CGAffineTransform.identity
+        }
+        
+        
+        
+    }
+    
+    
+    
     
     private func setupAstronomyImage() {
         astronomyImageOfDay = UIImageView()
-        astronomyImageOfDay.image = UIImage(systemName: "checkmark")
         view.addSubview(astronomyImageOfDay)
         astronomyImageOfDay.contentMode = .scaleAspectFill
         
@@ -47,20 +151,20 @@ class ViewController: UIViewController {
         astronomyImageOfDay.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
         astronomyImageOfDay.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         astronomyImageOfDay.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        astronomyImageOfDay.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.75).isActive = true
+        astronomyImageOfDay.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         
         
         astronomyImageOfDay.isUserInteractionEnabled = true
         let touchGesture = UITapGestureRecognizer(target: self, action: #selector(handleTouch(_:)))
         touchGesture.numberOfTouchesRequired = 1
         touchGesture.numberOfTapsRequired = 1
-        
+
         astronomyImageOfDay.addGestureRecognizer(touchGesture)
         
         
     }
     
-    @ objc private func handleTouch(_ gesture: UITapGestureRecognizer) {
+    @objc private func handleTouch(_ gesture: UITapGestureRecognizer) {
         print("CALLED")
         if explanationView.alpha == 1 {
             explanationView.alpha = 0
@@ -68,7 +172,7 @@ class ViewController: UIViewController {
             explanationView.alpha = 1
         }
 
-        
+
     }
     
     func setupDescriptionLabel() {
@@ -83,67 +187,73 @@ class ViewController: UIViewController {
     }
     
     private func setupGetImageButton() {
-        view.addSubview(getImageButton)
+        astronomyImageOfDay.addSubview(getImageButton)
+        getImageButton.alpha = 0.0
         getImageButton.translatesAutoresizingMaskIntoConstraints = false
-        getImageButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
-        getImageButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        
-        getImageButton.setTitle("Get data", for: .normal)
-        getImageButton.backgroundColor = .black
-        getImageButton.tintColor = .white
-        
-        getImageButton.addTarget(self, action: #selector(handleData(_:)), for: .touchUpInside)
-    }
 
+        getImageButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -5).isActive = true
+        getImageButton.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: 200).isActive = true
+        
+        getImageButton.setTitle("i", for: .normal)
+        getImageButton.titleEdgeInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+        getImageButton.setTitleColor(.white, for: .normal)
+        
+        getImageButton.backgroundColor = .black
+       
+       
+        getImageButton.titleLabel?.font = UIFont(name: "AvenirNext-Heavy", size: 12)
+        getImageButton.tintColor = .black
+
+        
+        getImageButton.addTarget(self, action: #selector(handleSecretInstructions(_:)), for: .touchUpInside)
+    }
+    
     
     @objc private func handleData(_ sender: UIButton) {
-        //loadingView.startAnimating()
-        print("pressed")
-
-        networkManager.getImageOfTheDay { (model, image) in
+        networkManager.getImageOfTheDay {[weak self] (model, image) in
             print(model.explanation)
             DispatchQueue.main.async {
-                self.astronomyImageOfDay.image = image
-
+                self?.astronomyImageOfDay.image = image
+                
             }
         }
-//        networkManager.getImageOfTheDay {[weak self] (model, image) in
-//            guard let self = self else { return }
-//            print(model.explanation)
-//        }
+        
     }
     
     private func setupExplanationView() {
         astronomyImageOfDay.addSubview(explanationView)
         explanationView.translatesAutoresizingMaskIntoConstraints = false
-        
+
         explanationView.bottomAnchor.constraint(equalTo: astronomyImageOfDay.bottomAnchor).isActive = true
         explanationView.trailingAnchor.constraint(equalTo: astronomyImageOfDay.trailingAnchor).isActive = true
-        
+
         explanationView.heightAnchor.constraint(equalToConstant: 50).isActive = true
         explanationView.widthAnchor.constraint(equalToConstant: 50).isActive = true
-        
-        explanationView.backgroundColor = .systemGreen
-    }
-       
-        
-        
-        //to add a checkmark image when data is downloaded fine
-        
-    
 
+        explanationView.backgroundColor = .clear
+    }
+    
+    
+    
+    
+    
+    
 }
 
 
-//extension ViewController: NetworkManagerDelegate {
-//    func didFinishDownloadingDataFor(model: ImageOfTheDayModel) {
-//        print(model.explanation)
-//        DispatchQueue.main.async {
-//            self.descriptionLabel.text = model.explanation
-//
-//        }
-//
-//    }
-//
-//}
+
+
+extension ViewController: SecretInstructionsDelegate {
+    func handleDismissal() {
+        UIView.animate(withDuration: 0.3, animations: {
+            self.visualEffectView.alpha = 0
+            self.popUpInstructionsWindow.alpha = 0
+            self.popUpInstructionsWindow.transform = CGAffineTransform(scaleX: 1.3, y: 1.3)
+        }) { (_) in
+            self.popUpInstructionsWindow.removeFromSuperview()
+        }
+    }
+    
+    
+}
 
