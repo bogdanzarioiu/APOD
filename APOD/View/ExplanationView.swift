@@ -24,7 +24,7 @@ class ExplanationView: UIView {
         var instructions = UILabel()
         instructions.translatesAutoresizingMaskIntoConstraints = false
         instructions.textColor = .black
-        instructions.font = UIFont(name: "AvenirNext-Heavy", size: 15)
+        instructions.font = UIFont(name: "AvenirNext-Heavy", size: 14)
         instructions.numberOfLines = 0
         instructions.text = ""
             instructions.textAlignment = .center
@@ -52,7 +52,7 @@ class ExplanationView: UIView {
         backgroundColor = UIColor.clear.withAlphaComponent(0.0)
         
         addSubview(instructionsLabel)
-        instructionsLabel.topAnchor.constraint(equalTo: topAnchor, constant: 100).isActive = true
+        instructionsLabel.topAnchor.constraint(equalTo: topAnchor, constant: 50).isActive = true
         instructionsLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20).isActive = true
         instructionsLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20).isActive = true
         

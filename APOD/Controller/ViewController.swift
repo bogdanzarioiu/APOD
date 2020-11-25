@@ -84,6 +84,7 @@ class ViewController: UIViewController {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1.2) {
                     UIView.animate(withDuration: 0.2) {
                         self?.getImageButton.alpha = 1.0
+                        self?.getImageButton.transform = CGAffineTransform(scaleX: 1.5, y: 1.5)
                     }
                 }
      
@@ -93,7 +94,7 @@ class ViewController: UIViewController {
         setupAstronomyImage()
         setupDescriptionLabel()
         setupGetImageButton()
-        setupExplanationView()
+        //setupExplanationView()
         
         view.addSubview(visualEffectView)
         
@@ -110,7 +111,7 @@ class ViewController: UIViewController {
     private func setupLoadingLabel() {
         view.addSubview(loadingLabel)
         
-        loadingLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 70).isActive = true
+        loadingLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 100).isActive = true
         loadingLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         
     }
@@ -188,21 +189,19 @@ class ViewController: UIViewController {
     
     private func setupGetImageButton() {
         astronomyImageOfDay.addSubview(getImageButton)
-        getImageButton.alpha = 0.0
         getImageButton.translatesAutoresizingMaskIntoConstraints = false
 
-        getImageButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -5).isActive = true
+        getImageButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0).isActive = true
         getImageButton.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: 200).isActive = true
         
         getImageButton.setTitle("i", for: .normal)
-        getImageButton.titleEdgeInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
         getImageButton.setTitleColor(.white, for: .normal)
+        getImageButton.backgroundColor = UIColor.clear.withAlphaComponent(0.3)
         
-        getImageButton.backgroundColor = .black
        
-       
-        getImageButton.titleLabel?.font = UIFont(name: "AvenirNext-Heavy", size: 12)
-        getImageButton.tintColor = .black
+        getImageButton.titleLabel?.font = UIFont(name: "Avenir-Light", size: 12)
+        getImageButton.alpha = 0.0
+
 
         
         getImageButton.addTarget(self, action: #selector(handleSecretInstructions(_:)), for: .touchUpInside)
